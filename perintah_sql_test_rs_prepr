@@ -1,0 +1,61 @@
+//ADD FOREND KEY pasien registrasi_pasien
+ALTER TABLE registrasi_pasien ADD CONSTRAINT fk_registrasi_pasien_pasien FOREIGN KEY (no_rekam_medis) REFERENCES pasien (no_rekam_medis)
+
+//ADD FOREND KEY poli registrasi_pasien
+ALTER TABLE registrasi_pasien ADD CONSTRAINT fk_registrasi_pasien_poli FOREIGN KEY (id_poli_tujuan) REFERENCES poli (id_poli);
+
+ALTER TABLE periksa_pasien ADD CONSTRAINT fk_periksa_pasien_dokter FOREIGN KEY (kd_dokter) REFERENCES dokter (kd_dokter);
+
+ALTER TABLE periksa_pasien ADD CONSTRAINT fk_periksa_pasien_pasien FOREIGN KEY (no_rekam_medis) REFERENCES pasien (no_rekam_medis);
+
+ALTER TABLE dokter ADD CONSTRAINT fk_dokter_poli FOREIGN KEY (id_poli) REFERENCES poli (id_poli);
+
+//UBAH tgl_registrasi ke default current_timestamp
+ALTER TABLE `registrasi_pasien` CHANGE `tgl_registrasi` `tgl_registrasi` DATE NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+//INSERT table pasien
+	INSERT INTO pasien (no_rekam_medis, nama_pasien, NIK) VALUES (01, "iwan", 1234892222);
+
+//MODIFY no_rekam_medis
+ALTER TABLE registrasi_pasien MODIFY no_rekam_medis VARCHAR(5);
+
+//INSERT registrasi_pasien
+INSERT INTO registrasi_pasien (no_rekam_medis, no_registrasi, id_poli_tujuan) VALUES ("01", "001", 1); 
+
+//JOIN semua TABLE
+SELECT pasien.no_rekam_medis, pasien.nama_pasien, pasien.NIK, poli.nm_poli, dokter.nm_dokter, periksa_pasien.ket_diagnosa, registrasi_pasien.no_registrasi, registrasi_pasien.tgl_registrasi FROM pasien JOIN periksa_pasien ON periksa_pasien.no_rekam_medis = pasien.no_rekam_medis JOIN dokter ON dokter.kd_dokter = periksa_pasien.kd_dokter JOIN registrasi_pasien ON registrasi_pasien.no_rekam_medis = pasien.no_rekam_medis JOIN poli ON poli.id_poli = registrasi_pasien.id_poli_tujuan WHERE dokter.id_poli = poli.id_poli;
+
+//CREATE TABLE dokter
+CREATE TABLE dokter (kd_dokter VARCHAR(4) NOT NULL, nm_dokter VARCHAR(255) NOT NULL, id_poli INT NOT NULL, PRIMARY KEY (kd_dokter));
+
+//insert dokter
+NSERT INTO dokter (kd_dokter, nm_dokter, id_poli) VALUES ("D001", "angga", 1);
+INSERT INTO dokter (kd_dokter, nm_dokter, id_poli) VALUES ("D002", "widodo", 2);
+INSERT INTO dokter (kd_dokter, nm_dokter, id_poli) VALUES ("D003", "natanael", 3);
+
+
+//INSERT PERIKSA_PASIEN
+INSERT INTO periksa_pasien (no_rekam_medis, kd_dokter, ket_diagnosa) VALUES ("01", "D001", "gigi berlubang");
+INSERT INTO periksa_pasien (no_rekam_medis, kd_dokter, ket_diagnosa) VALUES ("02", "D002", "saraf kejepit");
+
+//FILTER PASIEN BY tgl_registrasi, nama_pasien, nm_dokter
+SELECT pasien.no_rekam_medis, pasien.nama_pasien, pasien.NIK, poli.nm_poli, dokter.nm_dokter, periksa_pasien.ket_diagnosa, registrasi_pasien.no_registrasi, registrasi_pasien.tgl_registrasi FROM pasien JOIN periksa_pasien ON periksa_pasien.no_rekam_medis = pasien.no_rekam_medis JOIN dokter ON dokter.kd_dokter = periksa_pasien.kd_dokter JOIN registrasi_pasien ON registrasi_pasien.no_rekam_medis = pasien.no_rekam_medis JOIN poli ON poli.id_poli = registrasi_pasien.id_poli_tujuan WHERE dokter.id_poli = poli.id_poli AND registrasi_pasien.tgl_registrasi LIKE '%%' AND pasien.nama_pasien LIKE '%%' AND dokter.nm_dokter LIKE '%%' ORDER BY registrasi_pasien.tgl_registrasi DESC;
+
+//FILTER DOKTER BY tgl_registrasi, nama_pasien, nm_dokter
+SELECT dokter.kd_dokter, dokter.nm_dokter, poli.nm_poli, COUNT(DISTINCT pasien.no_rekam_medis) AS jumlah_pasien, dokter.tanggal FROM dokter JOIN periksa_pasien ON dokter.kd_dokter = periksa_pasien.kd_dokter JOIN pasien ON periksa_pasien.no_rekam_medis = pasien.no_rekam_medis JOIN registrasi_pasien ON registrasi_pasien.no_rekam_medis = pasien.no_rekam_medis JOIN poli ON dokter.id_poli = poli.id_poli AND dokter.tanggal LIKE '%%' AND dokter.nm_dokter LIKE '%%' GROUP BY dokter.nm_dokter, poli.nm_poli;
+
+
+
+//insert sekaligus
+INSERT INTO pasien (no_rekam_medis, nama_pasien, NIK)
+VALUES ('03', 'aminah', '97467323446');
+
+INSERT INTO registrasi_pasien (no_rekam_medis, no_registrasi ,id_poli_tujuan)
+VALUES ('03', '005', 2);
+
+INSERT INTO periksa_pasien (no_rekam_medis, kd_dokter, ket_diagnosa)
+VALUES ('03', 'D002', 'ganguan saraf mata');
+
+
+
+
