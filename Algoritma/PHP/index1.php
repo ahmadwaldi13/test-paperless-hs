@@ -1,28 +1,37 @@
 <?php
 
-function calculateNeededStatues($statues) {
-    sort($statues);
+function calculateNeededStatues($patung) {
+    sort($patung);
+
+    $jumlahPatungDibutuhkan = 0;
+    $patungDibutuhkan = [];
     
-    // Inisialisasi variabel
-    $neededStatues = 0;
-    
-    // Menghitung jumlah patung yang diperlukan
-    for ($i = 0; $i < count($statues) - 1; $i++) {
-        // Menghitung selisih antara dua patung bertetangga
-        $difference = $statues[$i + 1] - $statues[$i];
+    for ($i = 0; $i < count($patung) - 1; $i++) {
+        $perbedaan = $patung[$i + 1] - $patung[$i];
         
-        // Jika selisih lebih dari 1, hitung patung yang diperlukan
-        if ($difference > 1) {
-            $neededStatues += ($difference - 1);
+        if ($perbedaan > 1) {
+            for ($j = 1; $j < $perbedaan; $j++) {
+                $jumlahPatungDibutuhkan++;
+                $patungDibutuhkan[] = $patung[$i] + $j;
+            }
         }
     }
     
-    return $neededStatues;
+    return [
+        'jumlahPatungDibutuhkan' => $jumlahPatungDibutuhkan,
+        'patungDibutuhkan' => $patungDibutuhkan
+    ];
 }
 
-// Contoh penggunaan
-$statues1 = [6, 2, 3, 8];
-echo "Jumlah patung yang diperlukan: " . calculateNeededStatues($statues1) . "\n"; // Output: 3
+$patung1 = [6, 2, 3, 8];
+$result1 = calculateNeededStatues($patung1);
+var_dump($result1);
+echo "Jumlah patung yang diperlukan: " . $result1['jumlahPatungDibutuhkan'] . "\n";
+echo "Patung dengan tinggi: " . implode(', ', $result1['patungDibutuhkan']) . " diperlukan\n";
 
-$statues2 = [0, 3, 5];
-echo "Jumlah patung yang diperlukan: " . calculateNeededStatues($statues2) . "\n"; // Output: 3
+$patung2 = [0, 3, 5];
+$result2 = calculateNeededStatues($patung2);
+echo "Jumlah patung yang diperlukan: " . $result2['jumlahPatungDibutuhkan'] . "\n";
+echo "Patung dengan tinggi: " . implode(', ', $result2['patungDibutuhkan']) . " diperlukan\n";
+
+?>

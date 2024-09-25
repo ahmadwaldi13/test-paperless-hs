@@ -1,25 +1,25 @@
 <?php
 
-function maxAdjacentProduct($array) {
-    $maxProduct = PHP_INT_MIN;
+function resultMaxValue($data) {
+    $maxValue = PHP_INT_MIN;
     
 
-    for ($i = 0; $i < count($array) - 1; $i++) {
-        $product = $array[$i] * $array[$i + 1];
+    for ($i = 0; $i < count($data) - 1; $i++) {
+        $value = $data[$i] * $data[$i + 1];
         
-        if ($product > $maxProduct) {
-            $maxProduct = $product;
+        if ($value > $maxValue) {
+            $maxValue = $value;
         }
     }
     
-    return $maxProduct;
+    return $maxValue;
 }
 
-$array1 = [3, 6, -2, -5, 7, 3];
-echo "Hasil maksimum: " . maxAdjacentProduct($array1) . "\n"; 
+$data1 = [3, 6, -2, -5, 7, 3];
+echo "Hasil maksimum: " . resultMaxValue($data1) . "\n"; 
 
-$array2 = [5, 1, 2, 3, 1, 4];
-echo "Hasil maksimum: " . maxAdjacentProduct($array2) . "\n";
+$data2 = [5, 1, 2, 3, 1, 4];
+echo "Hasil maksimum: " . resultMaxValue($data2) . "\n";
 
-$array3 = [-1, -2];
-echo "Hasil maksimum: " . maxAdjacentProduct($array3) . "\n";
+$data3 = [-1, -2];
+echo "Hasil maksimum: " . resultMaxValue($data3) . "\n";
